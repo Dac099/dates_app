@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { signIn } from '../../supabase/auth';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabase/client';
 import { retrieveUserSession } from '../../utils/verifySession';
 
 const SignIn = () => {
@@ -14,17 +13,6 @@ const SignIn = () => {
   const [ isAnEmail, setIsAnEmail ] = React.useState(true);
 
   React.useEffect(() => {
-
-    // async function retrieveUserSession() {
-    //   const { data, error } = await supabase.auth.getSession();
-    //   console.log('Error: ' + error);
-    //   console.log(data);
-      
-    //   if(!error){
-    //     navigate('/');
-    //   }
-    // }
-
     retrieveUserSession('/', navigate);
   }, []);
 
@@ -50,7 +38,6 @@ const SignIn = () => {
       const res = await signIn(email, password);
       
       if(res !== undefined){
-        // console.log(res);
         navigate('/');
       }
     }
