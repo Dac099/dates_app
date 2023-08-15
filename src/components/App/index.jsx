@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { SignIn } from '../../routes/signIn';
 import { SignUp } from '../../routes/signUp';
 import { Main } from '../main';
+import { Profile } from '../../routes/profile';
 
 const router = createBrowserRouter([
   {
@@ -11,11 +12,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'perfil',
-        element: <p>Aqui se ve el perfil del usuario</p>
+        element: <Profile />
       },
       {
         path: 'conexiones',
-        element: <p>Aqui aparecen las conexiones</p>
+        element: <p className='text-center text-5xl font-black text-amber-600'>Proximamente</p>
       }
     ]
   },

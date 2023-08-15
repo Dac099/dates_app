@@ -18,7 +18,7 @@ const SignUp = () => {
 
 
   React.useEffect(() =>  {
-    retrieveUserSession('/', navigate);
+    retrieveUserSession(false, navigate, '/');
   }, []);
 
   const defineValidPassword = (password) => {

@@ -13,7 +13,7 @@ const SignIn = () => {
   const [ isAnEmail, setIsAnEmail ] = React.useState(true);
 
   React.useEffect(() => {
-    retrieveUserSession('/', navigate);
+    retrieveUserSession(false, navigate, '/');
   }, []);
 
   const handleSubmit = async(e) => {
