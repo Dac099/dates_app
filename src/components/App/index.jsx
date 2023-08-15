@@ -4,15 +4,20 @@ import { SignIn } from '../../routes/signIn';
 import { SignUp } from '../../routes/signUp';
 import { Main } from '../main';
 import { Profile } from '../../routes/profile';
+import { fetchGroups, postGroup } from '../main';
+import { fetchUserData } from '../../routes/profile';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Main />,
+    loader: fetchGroups,
+    action: postGroup,
     children: [
       {
         path: 'perfil',
-        element: <Profile />
+        element: <Profile />,
+        loader: fetchUserData,
       },
       {
         path: 'conexiones',

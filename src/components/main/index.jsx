@@ -5,6 +5,7 @@ import { BiSolidUser } from "react-icons/bi";
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
 import { Groups } from '../../routes/groups';
+import { getGroups, createGroup } from '../../supabase/groups';
 
 const Main = () => {
   const location = useLocation();
@@ -87,5 +88,16 @@ const Main = () => {
   );
 }
 
+
+//Loaders 
+export const fetchGroups = async() => {
+  const groups = await getGroups();
+  return groups;
+}
+
+export const postGroup = async({params, request}) => {
+  const formData = await request.formData();
+  console.log(formData);
+}
 
 export {Main};

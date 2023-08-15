@@ -1,23 +1,33 @@
 import React from 'react';
 import { getUserData } from '../../supabase/get_user_data';
 import { LiaUserEditSolid } from "react-icons/lia";
+import { signOut } from '../../supabase/auth';
+import { Loading } from '../../components/loading';
+import { Error } from  '../../components/error'
+import { useLoaderData } from 'react-router-dom';
 
 const Profile = () => {
-  const [ user_data, setUserData] = React.useState({});
-
-  React.useEffect(() => {
-    getUserData()
-    .then(data => setUserData(data))
-  }, []);
+  const user_data = useLoaderData();
 
   return (
     <section className='flex flex-wrap gap-7 justify-center sm:justify-around h-4/6'>
-      <section>
+      <section className='flex flex-col items-center gap-4'>
         <div className='rounded-full relative bg-amber-600 w-36 h-36'>
           <div className='absolute bottom-1 right-1 bg-pink-700 w-11 h-11 rounded-full grid place-content-center text-2xl text-center text-pink-100 cursor-pointer'>
             <LiaUserEditSolid />
           </div>
         </div>
+
+        <button 
+          type='button'
+          className='bg-gray-500 text-gray-200 font-semibold w-28 h-10 rounded-md cursor-pointer shadow-sm hover:shadow-amber-400 border-amber-400 border-solid hover:border-2'
+          onClick={async () => {
+            await signOut();
+            location.reload();
+          }}
+        >
+          Cerrar sesión
+        </button>
       </section>
 
       <section className='sm:w-2/3 flex flex-col items-center gap-8 justify-between'>
@@ -70,6 +80,12 @@ const Profile = () => {
       </section>
     </section>
   );
+}
+
+//Loaders
+export const fetchUserData = async() => {
+  const userData = await getUserData();
+  return userData;
 }
 
 export {Profile};
