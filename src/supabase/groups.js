@@ -13,13 +13,32 @@ export const getGroups = async() => {
   }
 }
 
-export const createGroup = async(groud_data) => {
+export const createGroup = async(group_data) => {
+  try {
+    const { data,error } = await supabase
+    .from('groups')
+    .insert({
+      title: group_data.title,
+      description: group_data.description
+    })
+    .select();
+    
+    if(error) throw new Error(error);
+
+    return data;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getGroupByID = async(group_id) => {
   try {
     const { data, error } = await supabase
-      .from('groups')
-      .insert(groud_data)
-      .select();
-    
+    .from('groups')
+    .select('*')
+    .eq('id', group_id);
+
     if(error) throw new Error(error);
 
     return data;

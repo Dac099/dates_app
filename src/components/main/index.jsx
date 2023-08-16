@@ -5,11 +5,11 @@ import { BiSolidUser } from "react-icons/bi";
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
 import { Groups } from '../../routes/groups';
-import { getGroups, createGroup } from '../../supabase/groups';
 
 const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const regexToGroupsPath = /^\/groups/;
 
   React.useEffect(() => {
     retrieveUserSession(true, navigate, location.pathname);
@@ -27,13 +27,25 @@ const Main = () => {
             <Link 
               to={'/'}
               className={
-                location.pathname == '/'
+                location.pathname === '/' || regexToGroupsPath.test(location.pathname)
                 ? 'bg-red-400 rounded-lg p-1 text-gray-50 font-semibold flex gap-4 items-center'
                 : ''
               }
             >
-              <MdGroups className={location.pathname === '/' ? 'text-3xl' : 'text-xl'}/>
-              <p>{location.pathname === '/' ? 'Grupos' : ''}</p>
+              <MdGroups 
+                className={location.pathname === '/' || regexToGroupsPath.test(location.pathname)
+                  ? 'text-3xl' 
+                  : 'text-xl'
+                }
+              />
+
+              <p>
+                {location.pathname === '/' || regexToGroupsPath.test(location.pathname) 
+                  ? 'Grupos' 
+                  : ''
+                }
+              </p>
+              
             </Link>
           </li>
 
@@ -88,16 +100,5 @@ const Main = () => {
   );
 }
 
-
-//Loaders 
-export const fetchGroups = async() => {
-  const groups = await getGroups();
-  return groups;
-}
-
-export const postGroup = async({params, request}) => {
-  const formData = await request.formData();
-  console.log(formData);
-}
 
 export {Main};

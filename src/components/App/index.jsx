@@ -4,8 +4,11 @@ import { SignIn } from '../../routes/signIn';
 import { SignUp } from '../../routes/signUp';
 import { Main } from '../main';
 import { Profile } from '../../routes/profile';
-import { fetchGroups, postGroup } from '../main';
+import { fetchGroups } from '../../routes/groups';
+import { postGroup } from '../newGroupForm';
 import { fetchUserData } from '../../routes/profile';
+import { fetchGroup } from '../group';
+import { Group } from '../group';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +17,11 @@ const router = createBrowserRouter([
     loader: fetchGroups,
     action: postGroup,
     children: [
+      {
+        path: 'groups/:group_id',
+        loader: fetchGroup,
+        element: <Group />
+      },
       {
         path: 'perfil',
         element: <Profile />,

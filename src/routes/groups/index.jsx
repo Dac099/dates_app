@@ -3,6 +3,8 @@ import { TbMoodSadDizzy } from "react-icons/tb";
 import { GroupCard } from '../../components/groupCard';
 import { ModalContainer } from '../../components/modal';
 import { useLoaderData } from 'react-router-dom';
+import { NewGroupForm } from '../../components/newGroupForm';
+import { getGroups } from '../../supabase/groups';
 
 const Groups = () => {
   const groups = useLoaderData();
@@ -21,7 +23,7 @@ const Groups = () => {
 
       {show_modal &&
         <ModalContainer onClose={closeModal}>
-          <p>Conetino a mostrar</p>          
+          <NewGroupForm />         
         </ModalContainer>
       }
 
@@ -36,7 +38,7 @@ const Groups = () => {
       </section>
 
       {groups.length < 1 &&      
-        <section className='flex flex-wrap items-center justify-center'>
+        <section className='flex flex-wrap items-center justify-center animate-bounce'>
           <span className='text-9xl text-rose-500'><TbMoodSadDizzy className='inline'/></span> 
           <p className='text-2xl text-slate-800 font-semibold text-center'>Aun no cuentas con grupos creados</p>
         </section>
@@ -51,6 +53,7 @@ const Groups = () => {
               key={group.id}
               title={group.title}
               date={group.created_at}
+              group_id={group.id}
             />
           ))}
         </section>
@@ -60,5 +63,12 @@ const Groups = () => {
     </article>
   );
 }
+
+//loader
+export const fetchGroups = async() => {
+  const groups = await getGroups();
+  return groups;
+}
+
 
 export {Groups};
