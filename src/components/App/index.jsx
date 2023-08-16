@@ -9,6 +9,7 @@ import { postGroup } from '../newGroupForm';
 import { fetchUserData } from '../../routes/profile';
 import { fetchGroup } from '../group';
 import { Group } from '../group';
+import { insertNewActivite } from '../newActivitieForm';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       {
         path: 'groups/:group_id',
         loader: fetchGroup,
+        action: insertNewActivite,
         element: <Group />
       },
       {

@@ -81,7 +81,7 @@ const NewGroupForm = () => {
   );
 }
 
-//loader
+//action
 export const postGroup = async({request}) => {
   const formData = await request.formData();
   const new_group_data = Object.fromEntries(formData);

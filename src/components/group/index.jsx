@@ -3,14 +3,36 @@ import { getGroupByID } from '../../supabase/groups';
 import { getActivitiesByGroupId } from '../../supabase/activities';
 import { useLoaderData } from 'react-router-dom';
 import { TbMoodSadDizzy } from "react-icons/tb";
+import { ModalContainer } from '../modal';
+import { NewActivitieForm } from '../newActivitieForm';
+import { ActivitieCard } from '../activitieCard';
 
 
 export const Group = () => {
   const group_data = useLoaderData();
   const { group, activities } = group_data;
+  const [ show_modal, setShowModal] = React.useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  }
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
+
+  React.useEffect(() => {
+    closeModal();
+  }, [activities])
 
   return (
     <article>
+
+      {show_modal &&
+        <ModalContainer onClose={closeModal}>
+          <NewActivitieForm />       
+        </ModalContainer>
+      }
 
       <section className='flex justify-center sm:justify-between flex-wrap gap-4 mb-10 items-center'>
 
@@ -22,10 +44,26 @@ export const Group = () => {
         <button
           type='button'
           className='bg-neutral-300 rounded-md shadow-lg px-2 font-bold text-zinc-600 h-10 hover:shadow-gray-400'
+          onClick={openModal}
         >
           Nueva actividad
         </button>
 
+      </section>
+
+      <section className='flex justify-center'>
+        {activities.length > 0 &&
+          <article
+            className='flex flex-wrap max-w-4xl gap-4'
+          >
+            {activities.map(activitie => (
+              <ActivitieCard 
+                key={activitie.id}
+                data={activitie}
+              />
+            ))}
+          </article>
+        }
       </section>
 
       {activities.length < 1 &&
