@@ -3,6 +3,13 @@ import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 export const ActivitieCard = ({data}) => {
   const {title, comments, rating} = data;
+  const [ big_card, setBigCard ] = React.useState(false);
+
+  React.useEffect(() => {
+    if(comments.length > 60){
+      setBigCard(true);
+    }
+  }, []);
 
   const amountStars = () => {
     const max_rating = new Array(5).fill(0);
@@ -31,8 +38,15 @@ export const ActivitieCard = ({data}) => {
     );
   }
 
+
   return (
-    <article className='bg-stone-100 p-3 rounded-lg shadow-md relative max-w-xs flex-shrink h-min min-w-fit'>
+    <article 
+      className={big_card
+        ? 'activitie-card bg-stone-100 p-3 rounded-lg shadow-md relative flex-shrink row-span-2'
+        : 'activitie-card bg-stone-100 p-3 rounded-lg shadow-md relative flex-shrink'
+      }
+      // className='activitie-card bg-stone-100 p-3 rounded-lg shadow-md relative flex-shrink'
+    >
       <p className='text-xl font-semibold text-rose-500 mb-2'>{title}</p>
       <p className='text-sm text-stone-600 italic mb-2 text-justify'>"{comments}"</p>
       <div className='flex gap-1 text-2xl float-right mt-2'>

@@ -23,7 +23,7 @@ export const Group = () => {
 
   React.useEffect(() => {
     closeModal();
-  }, [activities])
+  }, [activities]);
 
   return (
     <article>
@@ -54,7 +54,7 @@ export const Group = () => {
       <section className='flex justify-center'>
         {activities.length > 0 &&
           <article
-            className='flex flex-wrap max-w-4xl gap-4'
+            className='grid grid-flow-dense gap-4 auto auto-rows-[min-content] auto-cols-fr grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]'
           >
             {activities.map(activitie => (
               <ActivitieCard 
