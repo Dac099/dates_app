@@ -3,6 +3,20 @@ import { Form } from 'react-router-dom';
 import { createNewActivitie } from '../../supabase/activities';
 
 export const NewActivitieForm = () => {
+  const [ rating, setRating ] = React.useState(0);
+  const [word_counter, setWordCounter ] = React.useState(0);
+
+  const counter_color = (counter) => {
+    let color = 'text-gray-400';
+    
+    if(counter > 50) color = 'text-yellow-400';
+
+    if(counter > 150) color = 'text-orange-400';
+
+    if(counter > 240) color = 'text-red-600';
+
+    return color;
+  }
 
 
   return (
@@ -41,27 +55,35 @@ export const NewActivitieForm = () => {
         <input 
           className='h-10 w-full rounded-md bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2' 
           type="number" 
+          max={5}
+          min={0}
           name="rating" 
           id="rating" 
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
         />
 
       </section>
 
-      <section className='flex flex-col mb-4'>
+      <section className='flex flex-col mb-4 relative'>
 
         <label 
           className='text-lg pl-2 mb-1 font-semibold text-slate-800' 
           htmlFor="comments"
         >
-          ¿Porqué la calificaste con estrellas?
+          ¿Porqué la calificaste con {rating} estrellas?
         </label>
 
         <textarea 
-          className='w-full rounded-md h-72 bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2 resize-none' 
+          className='w-full rounded-md h-56 bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2 resize-none pb-4' 
           type="text" 
+          maxLength={250}
           name="comments" 
           id="comments" 
+          onChange={(e) => setWordCounter(e.target.value.length)}
         />
+
+        <p className={'absolute bottom-2 right-2 ' + counter_color(word_counter)}>{word_counter}/250</p>
 
       </section>      
 

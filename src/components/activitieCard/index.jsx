@@ -1,5 +1,6 @@
 import React from 'react';
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 
 export const ActivitieCard = ({data}) => {
   const {title, comments, rating} = data;
