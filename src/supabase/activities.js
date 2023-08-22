@@ -70,3 +70,18 @@ export const updateActivitie = async(activitie_id, new_data) => {
     console.log(error);
   }
 }
+
+export const getActivitieById = async(activitie_id) => {
+  try {
+    const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .eq('id', activitie_id)
+
+    if(error) throw new Error(error);
+
+    return data[0];
+  } catch (error) {
+    console.log(error);
+  }
+}

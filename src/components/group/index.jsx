@@ -60,6 +60,7 @@ export const Group = () => {
               <ActivitieCard 
                 key={activitie.id}
                 data={activitie}
+                group_id={group.id}
               />
             ))}
           </article>

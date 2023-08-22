@@ -1,10 +1,11 @@
 import React from 'react';
 import { Form } from 'react-router-dom';
 import { createNewActivitie } from '../../supabase/activities';
+import { StarsInput } from '../starsInput';
 
 export const NewActivitieForm = () => {
   const [ rating, setRating ] = React.useState(0);
-  const [word_counter, setWordCounter ] = React.useState(0);
+  const [ word_counter, setWordCounter ] = React.useState(0);
 
   const counter_color = (counter) => {
     let color = 'text-gray-400';
@@ -18,12 +19,15 @@ export const NewActivitieForm = () => {
     return color;
   }
 
+  const setAmountStars = (amount) => {
+    setRating(amount);
+  }
 
   return (
     <Form
       id='activitie-form'
       method='post'
-      className='p-3 bg-gray-100 rounded-lg'
+      className='p-3 bg-gray-100 rounded-lg max-w-lg'
     >
       <section className='flex flex-col mb-4'>
 
@@ -52,27 +56,30 @@ export const NewActivitieForm = () => {
           ¿Cuántas estrellas le das?
         </label>
 
+        <StarsInput setAmountStars={setAmountStars}/>
+
         <input 
-          className='h-10 w-full rounded-md bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2' 
+          className='hidden' 
           type="number" 
           max={5}
           min={0}
           name="rating" 
           id="rating" 
           value={rating}
-          onChange={(e) => setRating(e.target.value)}
+          readOnly
         />
 
       </section>
 
-      <section className='flex flex-col mb-4 relative'>
-
-        <label 
-          className='text-lg pl-2 mb-1 font-semibold text-slate-800' 
-          htmlFor="comments"
-        >
-          ¿Porqué la calificaste con {rating} estrellas?
-        </label>
+      <section 
+        className='flex flex-col mb-4 relative'
+      >
+          <label 
+            className='text-lg pl-2 mb-1 font-semibold text-slate-800 text-center' 
+            htmlFor="comments"
+          >
+            ¿Porqué la calificaste con {rating} estrellas?
+          </label>
 
         <textarea 
           className='w-full rounded-md h-56 bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2 resize-none pb-4' 

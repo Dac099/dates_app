@@ -10,6 +10,9 @@ import { fetchUserData } from '../../routes/profile';
 import { fetchGroup } from '../group';
 import { Group } from '../group';
 import { insertNewActivite } from '../newActivitieForm';
+import { fetchActivitieById } from '../activitieCard';
+import { EditActivitie } from '../../routes/editActivitie';
+import { editActivitie } from '../../routes/editActivitie';
 
 const router = createBrowserRouter([
   {
@@ -19,10 +22,16 @@ const router = createBrowserRouter([
     action: postGroup,
     children: [
       {
-        path: 'groups/:group_id',
+        path: 'groups/:group_id/',
         loader: fetchGroup,
         action: insertNewActivite,
-        element: <Group />
+        element: <Group />,
+      },
+      {
+        path: 'groups/:group_id/activities/:activitie_id/edit',
+        element: <EditActivitie />,
+        loader: fetchActivitieById,
+        action: editActivitie
       },
       {
         path: 'perfil',
