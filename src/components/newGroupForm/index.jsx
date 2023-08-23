@@ -85,10 +85,9 @@ const NewGroupForm = () => {
 export const postGroup = async({request}) => {
   const formData = await request.formData();
   const new_group_data = Object.fromEntries(formData);
+  await createGroup(new_group_data);
 
-  const new_group = await createGroup(new_group_data);
-
-  return redirect(`/groups/${new_group[0].id}`);
+  return redirect(`/`);
 }
 
 

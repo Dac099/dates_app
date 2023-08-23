@@ -105,7 +105,6 @@ export const EditActivitie = () => {
 
         <textarea 
           className='w-full rounded-md h-56 bg-gray-200 text-slate-800 outline-2 outline-amber-500 px-2 resize-none pb-4' 
-          type="text" 
           maxLength={250}
           name="comments" 
           id="comments" 
@@ -130,7 +129,7 @@ export const EditActivitie = () => {
 
           <Link
             to={`/groups/${URLparams.group_id}`}
-            className='h-10 mx-auto my-0 bg-orange-300 p-2 rounded-lg font-semibold text-orange-800 shadow-md hover:shadow-orange-400 w-1/3 text-center'  
+            className='h-10 mx-auto my-0 bg-red-300 p-2 rounded-lg font-semibold text-orange-800 shadow-md hover:shadow-red-400 w-1/3 text-center'  
           >
             Cancelar
           </Link>
@@ -142,7 +141,7 @@ export const EditActivitie = () => {
 
 //action
 export const editActivitie = async({request, params}) => {
-  const form_data = await  request.formData();
+  const form_data = await request.formData();
   const new_data = Object.fromEntries(form_data);
   await updateActivitie(params.activitie_id, new_data);
 

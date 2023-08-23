@@ -47,3 +47,32 @@ export const getGroupByID = async(group_id) => {
     console.log(error);
   }
 }
+
+export const updateGroup = async(group_id, new_data) => {
+  try { 
+    
+    const { error } = await supabase
+    .from('groups')
+    .update(new_data)
+    .eq('id', group_id)
+
+    if(error) throw new Error(error);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const deleteGroup = async(group_id) => {
+  try {
+    const { error } = await supabase
+    .from('groups')
+    .delete()
+    .eq('id', group_id);
+
+    if(error) throw new Error(error);
+
+  } catch (error) {
+    console.log(error);
+  }
+}

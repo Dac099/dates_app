@@ -13,6 +13,11 @@ import { insertNewActivite } from '../newActivitieForm';
 import { fetchActivitieById } from '../activitieCard';
 import { EditActivitie } from '../../routes/editActivitie';
 import { editActivitie } from '../../routes/editActivitie';
+import { fetchGroupById } from '../groupCard';
+import { EditGroup } from '../../routes/editGroup';
+import { putGroup } from '../../routes/editGroup';
+import { getUser } from '../../supabase/user';
+import { EditProfile } from '../../routes/editProfile';
 
 const router = createBrowserRouter([
   {
@@ -23,9 +28,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'groups/:group_id/',
+        element: <Group />,
         loader: fetchGroup,
         action: insertNewActivite,
-        element: <Group />,
+      },
+      {
+        path: 'groups/:group_id/edit',
+        element: <EditGroup />,
+        loader: fetchGroupById,
+        action: putGroup,
       },
       {
         path: 'groups/:group_id/activities/:activitie_id/edit',
@@ -38,6 +49,11 @@ const router = createBrowserRouter([
         element: <Profile />,
         loader: fetchUserData,
       },
+      // {
+      //   path: 'perfil/:user_id/edit',
+      //   loader: getUser,
+      //   element: <EditProfile />
+      // },
       {
         path: 'conexiones',
         element: <p className='text-center text-5xl font-black text-amber-600'>Proximamente</p>

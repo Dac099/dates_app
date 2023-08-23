@@ -10,6 +10,7 @@ const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const regexToGroupsPath = /^\/groups/;
+  const regexToProfilePath = /^\/perfil/;
 
   React.useEffect(() => {
     retrieveUserSession(true, navigate, location.pathname);
@@ -67,13 +68,18 @@ const Main = () => {
             <Link 
               to={'/perfil'}
               className={
-                location.pathname == '/perfil'
+                location.pathname == '/perfil' || regexToProfilePath.test(location.pathname)
                 ? 'bg-red-400 rounded-lg p-1 text-gray-50 font-semibold flex gap-4 items-center'
                 : ''
               }
             >
-              <BiSolidUser className={location.pathname === '/perfil' ? 'text-3xl' : 'text-xl'}/>
-              <p>{location.pathname === '/perfil' ? 'Perfil' : ''}</p>
+              <BiSolidUser 
+                className={location.pathname === '/perfil' || regexToProfilePath.test(location.pathname)
+                  ? 'text-3xl' 
+                  : 'text-xl'
+                }
+              />
+              <p>{location.pathname === '/perfil' || regexToProfilePath.test(location.pathname) ? 'Perfil' : ''}</p>
             </Link>
           </li>
         </ul>

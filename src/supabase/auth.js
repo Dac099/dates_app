@@ -38,7 +38,8 @@ const signUp = async(email, password, name) => {
       password: password,
       options: {
         data: {
-          name: name
+          name: name,
+          url_picture: ''
         }
       }
     });

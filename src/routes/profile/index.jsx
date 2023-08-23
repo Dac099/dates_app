@@ -1,20 +1,29 @@
 import React from 'react';
-import { getUserData } from '../../supabase/get_user_data';
+import { getUserData } from '../../supabase/user';
 import { LiaUserEditSolid } from "react-icons/lia";
 import { signOut } from '../../supabase/auth';
-import { Loading } from '../../components/loading';
-import { Error } from  '../../components/error'
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, Link, useNavigate, useLocation } from 'react-router-dom';
+import { retrieveUserSession } from '../../utils/verifySession';
 
 const Profile = () => {
   const user_data = useLoaderData();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    retrieveUserSession(true, navigate, location.pathname);
+  }, []);
 
   return (
     <section className='flex flex-wrap gap-7 justify-center sm:justify-around h-4/6'>
       <section className='flex flex-col items-center gap-4'>
         <div className='rounded-full relative bg-amber-600 w-36 h-36'>
           <div className='absolute bottom-1 right-1 bg-pink-700 w-11 h-11 rounded-full grid place-content-center text-2xl text-center text-pink-100 cursor-pointer'>
-            <LiaUserEditSolid />
+            <Link
+              to={`/perfil/${user_data.id}/edit`}
+            >
+              <LiaUserEditSolid />
+            </Link>
           </div>
         </div>
 
@@ -85,6 +94,7 @@ const Profile = () => {
 //Loaders
 export const fetchUserData = async() => {
   const userData = await getUserData();
+  if(!userData) window.location.href = '/signin';
   return userData;
 }
 

@@ -18,6 +18,11 @@ const Groups = () => {
     setShowModal(false);
   }
 
+  React.useEffect(() => {
+    closeModal();
+  }, [groups]);
+
+
   return (
     <article>
 
@@ -38,7 +43,7 @@ const Groups = () => {
       </section>
 
       {groups.length < 1 &&      
-        <section className='flex flex-wrap items-center justify-center animate-bounce'>
+        <section className='flex flex-wrap items-center justify-center'>
           <span className='text-9xl text-rose-500'><TbMoodSadDizzy className='inline'/></span> 
           <p className='text-2xl text-slate-800 font-semibold text-center'>Aun no cuentas con grupos creados</p>
         </section>
