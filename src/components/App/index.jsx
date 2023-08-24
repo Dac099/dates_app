@@ -18,6 +18,7 @@ import { EditGroup } from '../../routes/editGroup';
 import { putGroup } from '../../routes/editGroup';
 import { getUser } from '../../supabase/user';
 import { EditProfile } from '../../routes/editProfile';
+import { updateUserData } from '../../routes/editProfile';
 
 const router = createBrowserRouter([
   {
@@ -49,11 +50,12 @@ const router = createBrowserRouter([
         element: <Profile />,
         loader: fetchUserData,
       },
-      // {
-      //   path: 'perfil/:user_id/edit',
-      //   loader: getUser,
-      //   element: <EditProfile />
-      // },
+      {
+        path: 'perfil/:user_id/edit',
+        loader: getUser,
+        action: updateUserData,
+        element: <EditProfile />
+      },
       {
         path: 'conexiones',
         element: <p className='text-center text-5xl font-black text-amber-600'>Proximamente</p>
