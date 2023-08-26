@@ -1,17 +1,54 @@
 import { supabase } from "./client";
 
-export const uploadProfilePicture = async(file, user_id) => {
+
+export const createFolderWithPicture = async(user_id, picture) => {
   try {
     const { data, error } = await supabase
     .storage
     .from('avatar')
-    .upload(`${user_id}_picture.png`, file);
+    .upload(`${user_id}/${Date.now()}.png`, picture, {
+      cacheControl: 'no-cache'
+    });
 
-    if(error) console.log(error);
-
-    return data;
+    if(error){
+      throw new Error(error.message);
+    }else{
+      return data;
+    }
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
+  }
+}
+
+export const getPublicUrlPicture = async(picture_path) => {
+  try {
+    const { data } = await supabase
+    .storage
+    .from('avatar')
+    .getPublicUrl(picture_path);
+  
+    return data;
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const deleteUserPicture = async(user_id, key) => {
+  try {
+    const { data, error } = await supabase
+    .storage    
+    .from('avatar')    
+    .remove([`${user_id}/${key}.png`]);
+
+    if(error){
+      throw new Error(error.message);
+    }else{
+      return data;
+    }
+
+  } catch (error) {
+    console.error(error);
   }
 }

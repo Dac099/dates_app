@@ -7,6 +7,7 @@ import { retrieveUserSession } from '../../utils/verifySession';
 
 const Profile = () => {
   const user_data = useLoaderData();
+  const url_picture = user_data.url_picture;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,7 +19,15 @@ const Profile = () => {
     <section className='flex flex-wrap gap-7 justify-center sm:justify-around h-4/6'>
       <section className='flex flex-col items-center gap-4'>
         <div className='rounded-full relative bg-amber-600 w-36 h-36'>
-          <div className='absolute bottom-1 right-1 bg-pink-700 w-11 h-11 rounded-full grid place-content-center text-2xl text-center text-pink-100 cursor-pointer'>
+          {url_picture !== '' &&
+            <img 
+              src={url_picture}
+              className='absolute top-0 left-0 w-full h-full rounded-full' 
+            />
+          }
+          <div 
+            className='absolute bottom-1 right-1 bg-pink-700 w-11 h-11 rounded-full grid place-content-center text-2xl text-center text-pink-100 cursor-pointer'
+          >
             <Link
               to={`/perfil/${user_data.id}/edit`}
             >
@@ -32,7 +41,7 @@ const Profile = () => {
           className='bg-gray-500 text-gray-200 font-semibold w-28 h-10 rounded-md cursor-pointer shadow-sm hover:shadow-amber-400 border-amber-400 border-solid hover:border-2'
           onClick={async () => {
             await signOut();
-            location.reload();
+            window.location.href = '/signin';
           }}
         >
           Cerrar sesión
