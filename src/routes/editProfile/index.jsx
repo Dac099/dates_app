@@ -11,7 +11,8 @@ import {
 import { 
   updateUserImgUrl, 
   updateUserEmail, 
-  updateUserName 
+  updateUserName,
+  updateUserPassword
 } from '../../supabase/user';
 
 export const EditProfile = () => {
@@ -19,12 +20,46 @@ export const EditProfile = () => {
   const { name, url_picture, key } = user.user_metadata;
 
   const [ picture, setPicture ] = React.useState(null);
-  const [ user_name, setUserName ] = React.useState(name);
-  const [ email, setEmail ] = React.useState(user.email);
   const [ preview_url, setPreviewUrl ] = React.useState(null);
+
+  const [ user_name, setUserName ] = React.useState(name);
+  const [ user_name_error, setUserNameError ] = React.useState(false);
+
+  const [ email, setEmail ] = React.useState(user.email);
+  const [ email_error, setEmailError ] = React.useState(false);
+  const [ is_an_email, setIsAnEmail ] = React.useState(true);
+  
+  const [ password, setPassword ] = React.useState('');
+  const [ capitalPassword, setCapitalPassword ] = React.useState(false);
+  const [ numberPassword, setNumberPassword ] = React.useState(false);
+  const [ lengtPassword, setLenghtPassword ] = React.useState(false);
+
+  const defineValidPassword = (password) => {
+    const regexCapital = /[A-Z]/;
+    const regexNumber = /[1-9]/;
+
+    if(password.length > 7){
+      setLenghtPassword(true);
+    }else{
+      setLenghtPassword(false);
+    }
+
+    if(regexCapital.test(password)){
+      setCapitalPassword(true);
+    }else{
+      setCapitalPassword(false);
+    }  
+
+    if(regexNumber.test(password)){
+      setNumberPassword(true);
+    }else{
+      setNumberPassword(false);
+    }
+  }
   
   const handleSubmit = async(e) => {
     e.preventDefault();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if(url_picture === '' && picture){
 
@@ -43,12 +78,35 @@ export const EditProfile = () => {
       await updateUserImgUrl(publicUrl, new_key);
     }
 
-    if(user_name !== '' && user_name !== name){
-      await updateUserName(user_name);
+    if(user_name !== ''){
+      if(user_name !== name){        
+        await updateUserName(user_name);
+      }
+    }else{
+      setUserNameError(true);
+      return;
     }
 
-    if(email !== '' && email !== user.email){
-      await updateUserEmail(email);
+    if(!emailRegex.test(email)){
+      setIsAnEmail(false);
+    }
+
+    if(email !== '' && is_an_email){
+      if(email !== user.email){
+        await updateUserEmail(email);
+      }
+    }
+    else{
+      setEmailError(true);
+      return;
+    }
+
+    if(
+      lengtPassword && 
+      capitalPassword &&
+      numberPassword
+    ){
+      await updateUserPassword(password);
     }
 
     window.location.href = '/perfil';
@@ -128,15 +186,24 @@ export const EditProfile = () => {
         >
           <label 
           htmlFor="user_name"
-          className='text-2xl block text-center mt-3 mb-2 font-semibold'
+          className='text-2xl block text-center mt-3 font-semibold'
         >
           Nombre de usuario
         </label>
+
+        {user_name_error &&
+          <p
+            className='text-rose-600 text-xs mb-2'
+          >
+            El nombre de usuario no puede quedar vacío
+          </p>
+        }
+
         <input 
           type="text" 
           name="user_name" 
           id="user_name"
-          className='bg-slate-200 p-2 h-10 w-full max-w-sm rounded-md text-xl outline-amber-500 text-center'
+          className={`bg-slate-200 p-2 h-10 w-full max-w-sm rounded-md text-xl outline-amber-500 text-center border-2 ${user_name_error ? 'border-rose-600' : 'border-0'}`}
           value={user_name} 
           onChange={e => setUserName(e.target.value)}
         />
@@ -147,18 +214,78 @@ export const EditProfile = () => {
       >
         <label 
           htmlFor="email"
-          className='text-2xl block text-center mt-3 mb-2 font-semibold'
+          className='text-2xl block text-center mt-3 font-semibold'
         >
-          Nombre de usuario
+          Correo electrónico
         </label>
+
+        {email_error &&
+          <p
+            className='text-rose-600 text-xs mb-2'
+          >
+            El email no puede quedar vacío
+          </p>
+        }
+
+        {!is_an_email && !email_error &&
+          <p
+            className='text-rose-600 text-xs mb-2'
+          >
+            El email debe de ser válido
+          </p>
+        }
+        
         <input 
           type="email" 
           name="email" 
           id="email"
-          className='bg-slate-200 p-2 h-10 w-full max-w-sm rounded-md text-xl outline-amber-500 text-center'
+          className={`bg-slate-200 p-2 h-10 w-full max-w-sm rounded-md text-xl outline-amber-500 text-center border-2 ${
+            email_error || !is_an_email ? 'border-rose-600 text-rose-500' : 'border-0'
+          }`}
           value={email} 
           onChange={e => setEmail(e.target.value)}
         />
+      </div>
+     
+      <div
+          className='flex flex-col items-center'
+      >
+        <label 
+          htmlFor="password"
+          className='text-2xl block text-center mt-3 font-semibold'
+        >
+          Constraseña
+        </label>
+
+        <p 
+          className='text-xs text-slate-500 mb-2 text-center '
+        >
+          Si el campo de abajo lo dejas vacío, entonces se coservará tu vieja contraseña
+        </p>
+
+        <input 
+          type="password" 
+          name="password" 
+          id="password"
+          className='bg-slate-200 p-2 h-10 w-full max-w-sm rounded-md text-xl outline-amber-500 text-center mb-2'
+          value={password} 
+          onChange={e => {
+            setPassword(e.target.value);
+            defineValidPassword(e.target.value);
+          }}
+        />
+
+        <p className='text-gray-400 self-start'>
+            {lengtPassword ? '✅' : '❌'} Al menos 8 caracteres
+        </p>
+
+        <p className='text-gray-400 self-start'>
+          {capitalPassword ? '✅' : '❌'} Al menos una mayúscula
+        </p>
+
+        <p className='text-gray-400 self-start'>
+          {numberPassword ? '✅' : '❌'} El menos un número (1-9)
+        </p>
       </div>
 
       <div

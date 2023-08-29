@@ -85,3 +85,22 @@ export const updateUserEmail = async(new_email) => {
     console.log(error);
   }
 }
+
+export const updateUserPassword = async(new_password) => {
+  try {
+    const { data, error } = await supabase
+    .auth
+    .updateUser({
+      password: new_password
+    })
+
+    if(error){
+      throw new Error(error.message);
+    }else{
+      return data;
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
