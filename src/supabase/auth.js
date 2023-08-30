@@ -8,13 +8,14 @@ const signIn = async(email, password) => {
     })
 
     if(error){
-      throw new Error(error);
+      throw new Error(error.message);
+    }else{
+      return data;
     }
 
-    return data;
   } catch (error) {
-    console.log(error.message)
-    console.log(error);
+    console.log(error.message);
+    return new Error(error.message);
   }
 }
 

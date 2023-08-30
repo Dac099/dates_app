@@ -11,6 +11,7 @@ const SignIn = () => {
   const [ emailError, setEmailError ] = React.useState(false);
   const [ passwordError, setPasswordError ] = React.useState(false);
   const [ isAnEmail, setIsAnEmail ] = React.useState(true);
+  const [ wrong_credentials, setWrongCredentials ] = React.useState(false);
 
   React.useEffect(() => {
     retrieveUserSession(false, navigate, '/');
@@ -36,8 +37,12 @@ const SignIn = () => {
 
     if(!emailError && !passwordError && isAnEmail){
       const res = await signIn(email, password);
-      
-      if(res !== undefined){
+
+      if(res.message && res.message === 'Invalid login credentials'){
+        console.log('Error con las credenciales de acceso');
+        setWrongCredentials(true);
+        return;
+      }else{
         navigate('/');
       }
     }
@@ -57,8 +62,15 @@ const SignIn = () => {
       </p>
       <form
         onSubmit={e => handleSubmit(e)}
-        className='grid grid-rows-3 gap-3'
-      >                
+        className='grid grid-rows-3 gap-3 relative'
+      >
+        {wrong_credentials &&
+          <p
+            className='text-xl text-center absolute -top-32 font-bold text-red-600'
+          >
+            El correo o la constraseña son incorrectos
+          </p> 
+        }
         <input 
           type="text" 
           name="email" 
@@ -69,8 +81,9 @@ const SignIn = () => {
             setEmail(e.target.value)
             setEmailError(false);
             setIsAnEmail(true);
+            setWrongCredentials(false);
           }}
-          className={(emailError || !isAnEmail)
+          className={(emailError || !isAnEmail || wrong_credentials)
             ? 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md border-red-400 border-2'
             : 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md'
           }
@@ -93,10 +106,11 @@ const SignIn = () => {
           placeholder="Contraseña"
           value={password}
           onChange={e => {
-            setPassword(e.target.value)
+            setPassword(e.target.value);
             setPasswordError(false);
+            setWrongCredentials(false);
           }}
-          className={passwordError
+          className={passwordError || wrong_credentials
             ? 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md border-red-400 border-2'
             : 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md'
           }
