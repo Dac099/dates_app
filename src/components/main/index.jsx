@@ -6,7 +6,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
 import { Groups } from '../../routes/groups';
 
-const Main = () => {
+const Main = () => {  
   const location = useLocation();
   const navigate = useNavigate();
   const regexToGroupsPath = /^\/groups/;

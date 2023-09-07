@@ -29,9 +29,7 @@ export const getUser = async() => {
   try {
     const { data, error } = await supabase.auth.getUser();
 
-    if(error) throw new Error(error);
-
-    return data;
+    return { data, error };
 
   } catch (error) {
     console.log(error);

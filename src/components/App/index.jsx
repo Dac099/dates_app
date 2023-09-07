@@ -18,6 +18,8 @@ import { EditGroup } from '../../routes/editGroup';
 import { putGroup } from '../../routes/editGroup';
 import { getUser } from '../../supabase/user';
 import { EditProfile } from '../../routes/editProfile';
+import { Connections } from '../../routes/connections';
+import { getConnectionsData } from '../../routes/connections';
 
 const router = createBrowserRouter([
   {
@@ -56,8 +58,9 @@ const router = createBrowserRouter([
       },
       {
         path: 'conexiones',
-        element: <p className='text-center text-5xl font-black text-amber-600'>Proximamente</p>
-      }
+        element: <Connections />,
+        loader: getConnectionsData
+      },
     ]
   },
   {
