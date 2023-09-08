@@ -3,6 +3,7 @@ import { useLoaderData } from 'react-router-dom';
 import { getUserConnections, getUserRequests } from '../../supabase/connections';
 import { getUser } from '../../supabase/user';
 import { RequestCard } from '../../components/requestCard';
+import { SearchBarConnections } from '../../components/searchBarConnections';
 
 export const Connections = () => {
   const data = useLoaderData();
@@ -30,9 +31,8 @@ export const Connections = () => {
   return (
     <article className='flex flex-wrap gap-3 items-center'>
       
-      <section className='shadow-md rounded-md p-2 border-gray-200 border-2 w-full'>
-        //Search bar connections
-
+      <section className='shadow-md rounded-md p-1 border-gray-200 border-2 w-full'>
+        <SearchBarConnections all_users={fake_data}/>  
       </section>
 
       <section className='flex w-full gap-2 flex-col sm:flex-row justify-between'>
