@@ -47,17 +47,17 @@ const router = createBrowserRouter([
         action: editActivitie
       },
       {
-        path: 'perfil',
+        path: 'profile',
         element: <Profile />,
         loader: fetchUserData,
       },
       {
-        path: 'perfil/:user_id/edit',
+        path: 'profile/:user_id/edit',
         loader: getUser,
         element: <EditProfile />
       },
       {
-        path: 'conexiones',
+        path: 'connections',
         element: <Connections />,
         loader: getConnectionsData
       },

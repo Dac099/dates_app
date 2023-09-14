@@ -5,12 +5,11 @@ import { BiSolidUser } from "react-icons/bi";
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
 import { Groups } from '../../routes/groups';
+import { NavBar } from '../NavBar';
 
 const Main = () => {  
   const location = useLocation();
   const navigate = useNavigate();
-  const regexToGroupsPath = /^\/groups/;
-  const regexToProfilePath = /^\/perfil/;
 
   React.useEffect(() => {
     retrieveUserSession(true, navigate, location.pathname);
@@ -18,78 +17,7 @@ const Main = () => {
 
   return (
     <>
-      <nav 
-        className='w-screen flex justify-between p-2 flex-wrap gap-4 '
-      >
-        <ul
-          className='border-rose-600 border-2 rounded-xl flex gap-2 p-3 items-center grow max-w-xs justify-between shrink shadow-md'
-        >
-          <li>
-            <Link 
-              to={'/'}
-              className={
-                location.pathname === '/' || regexToGroupsPath.test(location.pathname)
-                ? 'bg-red-400 rounded-lg p-1 text-gray-50 font-semibold flex gap-4 items-center'
-                : ''
-              }
-            >
-              <MdGroups 
-                className={location.pathname === '/' || regexToGroupsPath.test(location.pathname)
-                  ? 'text-3xl' 
-                  : 'text-xl'
-                }
-              />
-
-              <p>
-                {location.pathname === '/' || regexToGroupsPath.test(location.pathname) 
-                  ? 'Grupos' 
-                  : ''
-                }
-              </p>
-              
-            </Link>
-          </li>
-
-          <li>
-            <Link 
-              to={'/conexiones'}
-              className={
-                location.pathname == '/conexiones'
-                ? 'bg-red-400 rounded-lg p-1 text-gray-50 font-semibold flex gap-4 items-center'
-                : ''
-              }
-            >
-              <TbCirclesRelation className={location.pathname === '/conexiones' ? 'text-3xl' : 'text-xl'}/>
-              <p>{location.pathname === '/conexiones' ? 'Conexiones' : ''}</p>
-            </Link>
-          </li>
-
-          <li>
-            <Link 
-              to={'/perfil'}
-              className={
-                location.pathname == '/perfil' || regexToProfilePath.test(location.pathname)
-                ? 'bg-red-400 rounded-lg p-1 text-gray-50 font-semibold flex gap-4 items-center'
-                : ''
-              }
-            >
-              <BiSolidUser 
-                className={location.pathname === '/perfil' || regexToProfilePath.test(location.pathname)
-                  ? 'text-3xl' 
-                  : 'text-xl'
-                }
-              />
-              <p>{location.pathname === '/perfil' || regexToProfilePath.test(location.pathname) ? 'Perfil' : ''}</p>
-            </Link>
-          </li>
-        </ul>
-
-        <p
-          className='border-rose-600 border-2 rounded-xl text-zinc-800 font-semibold flex items-center justify-center text-xl p-3 order-first sm:order-last shrink max-w-xs grow shadow-md'
-        >
-          Dates App
-        </p>
-      </nav>
+      <NavBar />
 
       <main
         className='p-2 md:h-5/6 w-screen'

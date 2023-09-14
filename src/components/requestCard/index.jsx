@@ -9,7 +9,7 @@ export const RequestCard = ({user_data, requester=false, requested=false}) => {
         <div className='w-14 h-14 grid place-content-center bg-orange-400 rounded-full mb-2'>
           <img 
             src={user_data.url_img}
-            className='w-12 h-12 rounded-full'
+            className='w-12 h-12 rounded-full object-cover'
           />
         </div>
 
