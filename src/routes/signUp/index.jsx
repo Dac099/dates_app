@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
 
+
 const SignUp = () => {
   const navigate = useNavigate();
   const [ email, setEmail ] = React.useState('');

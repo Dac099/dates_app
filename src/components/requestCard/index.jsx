@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaUserSecret } from "react-icons/fa6";
 
 export const RequestCard = ({user_data, requester=false, requested=false}) => {
   return (
@@ -7,13 +8,18 @@ export const RequestCard = ({user_data, requester=false, requested=false}) => {
       <div className='flex gap-4 items-center'>
 
         <div className='w-14 h-14 grid place-content-center bg-orange-400 rounded-full mb-2'>
-          <img 
-            src={user_data.url_img}
-            className='w-12 h-12 rounded-full object-cover'
-          />
+          {user_data.url_img 
+            ?
+            <img 
+              src={user_data.url_img}
+              className='w-12 h-12 rounded-full object-cover'
+            />
+            :
+            <FaUserSecret className='text-3xl text-rose-800'/>
+          }
         </div>
 
-        <p className='text-xl font-semibold text-slate-800'>{user_data.name}</p>
+        <p className='text-xl font-semibold text-slate-800'>{user_data.user_name}</p>
 
       </div>
 

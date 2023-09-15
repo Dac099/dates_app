@@ -1,13 +1,21 @@
 import React from 'react';
 import { BsSearch } from "react-icons/bs";
+import { FaUserSecret } from "react-icons/fa6";
 
 export const SearchBarConnections = ({all_users}) => {
-  const [ users, setUsers ] = React.useState(all_users);
+  const [ users, setUsers ] = React.useState(all_users.data);
   const [ user_search, setUserSearch ] = React.useState('');
   const [ users_filtered, setUsersFiltered ] = React.useState([]);
 
-  const findUsers = (user_name) => {
-    console.log('Buscando parecidos con ' + user_name);
+  const findUsers = (name_pattern) => {
+    name_pattern = name_pattern.replace(/\s+/g, '').toLowerCase();
+    
+    if(name_pattern.length === 0) {
+      setUsersFiltered([]);
+      return;
+    }
+
+    setUsersFiltered(users.filter(user => user.user_name.toLowerCase().includes(name_pattern)));
   }
 
   return (
@@ -29,16 +37,21 @@ export const SearchBarConnections = ({all_users}) => {
       </div>
 
       <section className='grid sm:grid-cols-2 gap-2'>
-        {users.map((user, index) => (
+        {users_filtered.map((user, index) => (
           <article
             key={index}
             className='flex justify-between items-center border-2 border-neutral-200 rounded-lg p-1 w-full'
-          >            
-            <img 
-              src={user.url_img}
-              className='w-10 h-10 rounded-full object-cover'
-            />
-            <p className='w-5/6 font-semibold text-lg text-orange-400'>{user.name}</p>
+          >    
+            {user.url_img 
+              ? 
+              <img 
+                src={user.url_img}
+                className='w-10 h-10 rounded-full object-cover'
+              /> 
+              :
+              <FaUserSecret className='text-3xl text-rose-800'/>
+            }        
+            <p className='w-5/6 font-semibold text-lg text-orange-400'>{user.user_name}</p>          
           </article>
         ))}
       </section>
