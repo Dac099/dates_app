@@ -2,7 +2,7 @@ import React from 'react';
 import { BsSearch } from "react-icons/bs";
 import { FaUserSecret } from "react-icons/fa6";
 
-export const SearchBarConnections = ({all_users}) => {
+export const SearchBarConnections = ({all_users, connections, in_demand, requesters}) => {
   const [ users, setUsers ] = React.useState(all_users.data);
   const [ user_search, setUserSearch ] = React.useState('');
   const [ users_filtered, setUsersFiltered ] = React.useState([]);
@@ -16,6 +16,38 @@ export const SearchBarConnections = ({all_users}) => {
     }
 
     setUsersFiltered(users.filter(user => user.user_name.toLowerCase().includes(name_pattern)));
+  }
+
+  const userInConnections = (user_id) => {
+    let user_in_connections = false;
+    
+    connections.forEach(connection => {
+      if(connection.requester === user_id || connection.in_demand === user_id){
+        user_in_connections = true;        
+      }
+    })
+
+    return user_in_connections;
+  }
+
+  const userInRequesters = (user_id) => {
+    let user_is_requester = false;
+    
+    requesters.forEach(user => {
+      if(user.id === user_id) user_is_requester = true;
+    })
+
+    return user_is_requester;
+  }
+
+  const userInDemands = (user_id) => {
+    let user_in_demands = false;
+
+    in_demand.forEach(user => {
+      if(user.id === user_id) user_in_demands = true;
+    });
+
+    return user_in_demands;
   }
 
   return (
@@ -51,7 +83,52 @@ export const SearchBarConnections = ({all_users}) => {
               :
               <FaUserSecret className='text-3xl text-rose-800'/>
             }        
-            <p className='w-5/6 font-semibold text-lg text-orange-400'>{user.user_name}</p>          
+            <p className='w-5/6 font-semibold text-lg text-orange-400'>{user.user_name}</p>  
+
+            {userInConnections(user.id) &&
+              <button 
+                disabled="disabled"
+                className='border-2 border-gray-400 font-semibold text-gray-700 bg-gray-200 px-2 rounded-md'
+              >
+                Conectados
+              </button>
+            } 
+
+            {userInRequesters(user.id) &&
+              <div className='flex justify-between gap-2'>
+                <button 
+                  type="button"
+                  className='border-2 border-green-400 font-semibold text-green-700 hover:bg-green-200 px-2 rounded-md'
+                >
+                  Aceptar
+                </button>
+                <button 
+                  type="button"
+                  className='border-2 border-red-400 rounded-md px-2 font-semibold text-red-700 hover:bg-red-200'
+                >
+                  Rechazar
+                </button>
+              </div>
+            } 
+
+            {userInDemands(user.id) &&
+              <button 
+                type="button"
+                className='border-2 border-red-400 rounded-md px-2 font-semibold text-red-700 hover:bg-red-200'
+              >
+                Cancelar
+              </button>
+            }     
+
+            {!userInConnections(user.id) && !userInDemands(user.id) && !userInRequesters(user.id) &&
+              <button 
+                type="button"
+                className='border-2 border-green-400 font-semibold text-green-700 hover:bg-green-200 px-2 rounded-md'
+              >
+                Conexión
+              </button>
+            }
+
           </article>
         ))}
       </section>

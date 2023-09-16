@@ -6,7 +6,10 @@ export const getUserConnections = async() => {
     .from('conections')
     .select();
 
-    return { data, error };
+    if(error) throw new Error(error);
+
+    return data;
+
   } catch (error) {
     console.error(error);
   }
@@ -44,7 +47,9 @@ export const getRequests = async() => {
     .from('petitions')
     .select()
 
-    return { data, error };
+    if(error) throw new Error(error)
+
+    return data;
 
   } catch (error) {
     console.error(error);
@@ -120,14 +125,17 @@ export const getAllUsers = async() => {
   }
 }
 
+//Get the ID from the table users by the ID of the user in session
 export const getUserIdByAdminId = async(admin_id) => {
   try {
     const { data, error } = await supabase
     .from('users')
-    .select('*')
+    .select('id')
     .eq('admin_id', admin_id);
 
-    return { data, error };
+    if(error) throw new Error(error);
+
+    return data[0].id;
 
   } catch (error) {
     console.log(error);
@@ -152,7 +160,9 @@ export const getUserById = async(user_id) => {
     .select('*')
     .eq('id', user_id);
 
-    return { data, error };
+    if(error) throw new Error(error);
+
+    return data[0];
 
   } catch (error) {
     console.log(error);
