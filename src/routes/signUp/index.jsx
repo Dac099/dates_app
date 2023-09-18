@@ -3,6 +3,8 @@ import { signUp } from '../../supabase/auth';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { retrieveUserSession } from '../../utils/verifySession';
+import { insertUserInUsers } from '../../supabase/user';
+import { verifyUserNameUnique } from '../../supabase/user';
 
 
 const SignUp = () => {
@@ -16,6 +18,7 @@ const SignUp = () => {
   const [ lengtPassword, setLenghtPassword ] = React.useState(false);
   const [ userName, setUserName ] = React.useState('');
   const [ userNameEmpty, setUserNameEmpty ] = React.useState(false)
+  const [ is_user_name_available, setIsUserNameAvailable ] = React.useState(true);
 
 
   React.useEffect(() =>  {
@@ -67,10 +70,22 @@ const SignUp = () => {
       !userNameEmpty &&
       capitalPassword &&
       numberPassword &&
-      lengtPassword
+      lengtPassword &&
+      is_user_name_available
     ){
       const res = await signUp(email, password, userName);
       if(res !== undefined){
+        const { user } = res;
+
+        const error = await insertUserInUsers({
+          user_name: user.user_metadata.name,
+          email: user.email,
+          url_img: '',
+          admin_id: user.id
+        });
+
+        if(error) console.log(error);
+
         navigate('/');
       }
     }
@@ -97,19 +112,32 @@ const SignUp = () => {
           placeholder="Nombre de usuario"
           value={userName}
           onChange={e => {
-            setUserName(e.target.value);
+            setUserName(e.target.value.trim());
             setUserNameEmpty(false);
+            setIsUserNameAvailable(true);
           }}
           className={userNameEmpty
             ? 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md border-red-400 border-2'
             : 'bg-slate-200 h-10 pl-3 text-lg rounded-md w-72 outline-amber-500 shadow-md'
           }
+          onBlur={async(e) => {
+            setIsUserNameAvailable(await verifyUserNameUnique(e.target.value.trim())); 
+          }}
         />
+
         {userNameEmpty &&
           <p
             className='text-center text-red-400 text-lg'
           >
             Debes de ingresar un nombre de usuario
+          </p>
+        }
+
+        {!is_user_name_available &&
+          <p
+            className='text-center text-red-400 text-lg'
+          >
+            Nombre de usuario no disponible
           </p>
         }
 

@@ -102,3 +102,37 @@ export const updateUserPassword = async(new_password) => {
     console.log(error);
   }
 }
+
+export const insertUserInUsers = async(user_data) => {
+  try {
+    const { email, user_name, admin_id } = user_data;
+
+    const { error } = await supabase
+    .from('users')
+    .insert({
+      user_name,
+      email,
+      admin_id,
+      url_img: ''
+    });
+
+    return error;
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const verifyUserNameUnique = async(user_name) => {
+  try {
+    const { data, error } = await supabase
+    .from('users')
+    .select('user_name')
+    .eq('user_name', user_name);
+
+    return data.length < 1;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
