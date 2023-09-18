@@ -56,14 +56,14 @@ export const getRequests = async() => {
   }
 };
 
-export const cancelRequest = async(petition_id) => {
+export const cancelRequest = async(requester, user_in_demand) => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
     .from('petitions')
     .delete()
-    .eq(id, petition_id);
+    .match({requester, in_demand: user_in_demand});
 
-    return error;
+    console.log(data, error);
 
   } catch (error) {
     console.error(error);
@@ -93,14 +93,17 @@ export const acceptRequest = async(request_id, request, in_demand) => {
   }
 }
 
-export const newRequest = async(request, in_demand) => {
+export const newRequest = async(requester, in_demand) => {
   try {
     const { data, error } = await supabase
     .from('petitions')
     .insert({
-      request,
+      requester,
       in_demand
-    });
+    })
+    .select();
+
+    console.log(data, error);
 
     return {
       data, 

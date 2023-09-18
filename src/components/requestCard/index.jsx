@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaUserSecret } from "react-icons/fa6";
+import { getUser } from '../../supabase/user';
+import { cancelRequest } from '../../supabase/connections';
 
 export const RequestCard = ({user_data, requester=false, requested=false}) => {
   return (
@@ -36,6 +38,10 @@ export const RequestCard = ({user_data, requester=false, requested=false}) => {
         <button 
           type="button"
           className='border-2 border-red-400 hover:bg-red-200 px-2 h-10 w-24 rounded-md text-red-900 font-semibold flex-grow'
+          onClick={async () => {
+            const { data: {user}, error } = await getUser();
+            await cancelRequest(user.id, user_data.id);
+          }}
         >
           {requester ? 'Rechazar' : 'Eliminar'}
         </button>

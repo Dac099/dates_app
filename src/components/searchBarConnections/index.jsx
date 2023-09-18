@@ -1,6 +1,9 @@
 import React from 'react';
 import { BsSearch } from "react-icons/bs";
 import { FaUserSecret } from "react-icons/fa6";
+import { getUser } from '../../supabase/user';
+import { newRequest, cancelRequest } from '../../supabase/connections';
+
 
 export const SearchBarConnections = ({all_users, connections, in_demand, requesters}) => {
   const [ users, setUsers ] = React.useState(all_users.data);
@@ -50,6 +53,19 @@ export const SearchBarConnections = ({all_users, connections, in_demand, request
     return user_in_demands;
   }
 
+  const requestAUser = async(user_in_demand) => {
+    const { data: { user }, error } = await getUser();
+    await newRequest(user.id, user_in_demand.id);
+
+  }
+
+  const handleCancelBtn = async(user_in_demand) => {
+    const { data: { user }, error } = await getUser();
+    const res = await cancelRequest(user.id, user_in_demand);
+
+    if(res.error) console.log(res.error);
+  }
+
   return (
     <article className='flex flex-col gap-4 w-full'>
       <div className='flex justify-between items-center border-2 border-neutral-300 rounded-xl h-12'>
@@ -85,6 +101,7 @@ export const SearchBarConnections = ({all_users, connections, in_demand, request
             }        
             <p className='w-5/6 font-semibold text-lg text-orange-400'>{user.user_name}</p>  
 
+            {/* Button for users that already are connected */}
             {userInConnections(user.id) &&
               <button 
                 disabled="disabled"
@@ -94,6 +111,7 @@ export const SearchBarConnections = ({all_users, connections, in_demand, request
               </button>
             } 
 
+            {/* Button for reply to a requester */}
             {userInRequesters(user.id) &&
               <div className='flex justify-between gap-2'>
                 <button 
@@ -111,19 +129,25 @@ export const SearchBarConnections = ({all_users, connections, in_demand, request
               </div>
             } 
 
+            {/* Button for cancel a request */}
             {userInDemands(user.id) &&
               <button 
                 type="button"
                 className='border-2 border-red-400 rounded-md px-2 font-semibold text-red-700 hover:bg-red-200'
+                onClick={() => handleCancelBtn(user.id)}
               >
                 Cancelar
               </button>
-            }     
+            }   
 
+            {/* Button for make a request */}
             {!userInConnections(user.id) && !userInDemands(user.id) && !userInRequesters(user.id) &&
               <button 
                 type="button"
                 className='border-2 border-green-400 font-semibold text-green-700 hover:bg-green-200 px-2 rounded-md'
+                onClick={() => {
+                  requestAUser(user);
+                }}
               >
                 Conexión
               </button>
