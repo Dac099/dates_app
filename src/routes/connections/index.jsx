@@ -90,7 +90,7 @@ export const Connections = () => {
         <p className='text-2xl font-bold text-center text-rose-600 mb-4'>
           {connections.length > 0 
             ?
-            `Tus ${connections.length} conexiones`
+            `${connections.length} ${connections.length > 1 ? 'conexiones' : 'conexión'}`
             :
             'Aquí veras tus próximas conexiones'
           }

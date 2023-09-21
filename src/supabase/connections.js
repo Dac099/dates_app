@@ -70,23 +70,28 @@ export const cancelRequest = async(requester, user_in_demand) => {
   }
 }
 
-export const acceptRequest = async(request_id, request, in_demand) => {
-  try {
-    const { data: connection_data, error: connection_error } = await createNewConnection({
-      request,
-      in_demand
-    });
+export const acceptRequest = async(requester, admin_requester) => {
+  try {    
+    const { data:{user} } = await supabase.auth.getUser();
+    const public_user_id = await getUserIdByAdminId(user.id);
 
-    const { error: delete_error } = await supabase
+    const connection_promise = createNewConnection({
+      requester,
+      in_demand : public_user_id
+    });    
+
+    const petition_promise = supabase
     .from('petitions')
     .delete()
-    .eq(id, request_id);
+    .match({
+      requester : admin_requester,
+      in_demand : public_user_id
+    });
 
-    return {
-      connection_data,
-      connection_error,
-      delete_error,
-    };
+    const [ new_connection, petition_deleted ] = await Promise.all([ connection_promise, petition_promise ]);
+
+    console.log(new_connection);
+    console.log(petition_deleted);
 
   } catch (error) {
     console.error(error);
