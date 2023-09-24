@@ -1,205 +1,45 @@
 import { supabase } from "./client";
 
+export const getPublicUsers = async(user_id) => {
+  const { data, error } = await supabase
+  .from('users')
+  .select('id, user_name, url_img')
+  .neq('id', user_id)
+
+  if(error) console.log(error);
+
+  return data;
+}
+
 export const getUserConnections = async() => {
-  try {
-    const { data, error } = await supabase
-    .from('conections')
-    .select();
+  const { data, error } = await supabase
+  .from('connections')
+  .select();
 
-    if(error) throw new Error(error);
+  if(error) console.log(error);
 
-    return data;
-
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const createNewConnection = async(new_connection) => {
-  try {
-    const { data, error } = await supabase
-    .from('conections')
-    .insert(new_connection);
-
-    return { data, error };
-  } catch (error) {
-    console.error(error);
-  }
+  return data;
 }
 
-export const deleteConnection = async(connection_id) => {
-  try {
-    const { error } = await supabase
-    .from('conections')
-    .delete()
-    .eq('id', connection_id);
+export const getRequestersOfUser = async(user_id) => {
+  const requesters_ids = await supabase
+  .from('petitions')
+  .select(`
+    requester,
+    users()
+  `)
+  .eq('requested', user_id);
 
-    return error;
+  if(requesters_ids.error) console.log(requesters_ids.error);
 
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const getRequests = async() => {
-  try {
-    const { data, error } = await supabase
-    .from('petitions')
-    .select()
-
-    if(error) throw new Error(error)
-
-    return data;
-
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const cancelRequest = async(requester, user_in_demand) => {
-  try {
-    const { data, error } = await supabase
-    .from('petitions')
-    .delete()
-    .match({requester, in_demand: user_in_demand});
-
-    console.log(data, error);
-
-  } catch (error) {
-    console.error(error);
-  }
+  // console.log(requesters_ids);
 }
 
-export const acceptRequest = async(requester, admin_requester) => {
-  try {    
-    const { data:{user} } = await supabase.auth.getUser();
-    const public_user_id = await getUserIdByAdminId(user.id);
+export const getPublicUserId = async(session_id) => {
+  const { data, error } = await supabase
+  .from('users')
+  .select('id')
+  .eq('admin_id', session_id);
 
-    const connection_promise = createNewConnection({
-      requester,
-      in_demand : public_user_id
-    });    
-
-    const petition_promise = supabase
-    .from('petitions')
-    .delete()
-    .match({
-      requester : admin_requester,
-      in_demand : public_user_id
-    });
-
-    const [ new_connection, petition_deleted ] = await Promise.all([ connection_promise, petition_promise ]);
-
-    console.log(new_connection);
-    console.log(petition_deleted);
-
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export const newRequest = async(requester, in_demand) => {
-  try {
-    const { data, error } = await supabase
-    .from('petitions')
-    .insert({
-      requester,
-      in_demand
-    })
-    .select();
-
-    console.log(data, error);
-
-    return {
-      data, 
-      error
-    };
-
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export const getAllUsers = async() => {
-  try {
-    const { data, error } = await supabase
-    .from('users')
-    .select();
-
-    return { data, error };
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-//Get the ID from the table users by the ID of the user in session
-export const getUserIdByAdminId = async(admin_id) => {
-  try {
-    const { data, error } = await supabase
-    .from('users')
-    .select('id')
-    .eq('admin_id', admin_id);
-
-    if(error) throw new Error(error);
-
-    return data[0].id;
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-
-//get when the user is the requester
-export const getUserRequest = (all_requests, user_id) => {
-  return all_requests.filter(request => request.requester === user_id);
-}
-//get when the user is the requested
-export const getUserInDemandRequests = (all_requests, user_id) => {
-  return all_requests.filter(request => request.in_demand === user_id);
-}
-
-//get user by id
-export const getUserById = async(user_id) => {
-  try {
-    const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user_id);
-
-    if(error) throw new Error(error);
-
-    return data[0];
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-//get profiles that user request 
-export const getInDemandUsers = async(requests) => {
-  try {
-    const requestsPromises = requests.map(request => getUserById(request.in_demand));
-    const [ users ] = await Promise.all(requestsPromises);
-
-    return users.data;
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-//get profiles from users that request for the user
-export const getRequestersUsers = async(requests) => {
-  try {
-    //for each requester get his user_id
-    const users_id_promises = requests.map(request => getUserIdByAdminId(request.requester));
-    const [ users_data ] = await Promise.all(users_id_promises);
-
-    return users_data.data;
-
-  } catch (error) {
-    console.log(error);
-  }
+  return data[0].id
 }
