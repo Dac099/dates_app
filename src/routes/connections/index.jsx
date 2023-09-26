@@ -2,7 +2,9 @@ import React from 'react';
 import { getUser } from '../../supabase/user';
 import { 
   getRequestersOfUser,
-  getPublicUserId
+  getPublicUserId,
+  getUserRequests,
+  getUserConnections
 } from '../../supabase/connections';
 
 export const Connections = () => {
@@ -20,8 +22,11 @@ export const Connections = () => {
         
         const public_id = await getPublicUserId(session.data.user.id);
         if(public_id.error) throw new Error(public_id.error);
+
+        await getUserConnections(public_id);
         
-        await getRequestersOfUser(public_id);
+        // await getRequestersOfUser(public_id);
+        // await getUserRequests(public_id);
 
 
         setSessionId(session.data.user.id);

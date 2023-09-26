@@ -11,28 +11,58 @@ export const getPublicUsers = async(user_id) => {
   return data;
 }
 
-export const getUserConnections = async() => {
-  const { data, error } = await supabase
+export const getUserConnections = async(user_id) => {
+  const requesters = supabase
   .from('connections')
-  .select();
+  .select(`
+    id,
+    requester,
+    users!connections_requester_fkey(user_name, url_img)
+  `)
+  .eq('requested', user_id);
+  
+  const requesteds = supabase
+  .from('connections')
+  .select(`
+    id,
+    requested,
+    users!connections_requested_fkey(user_name, url_img)
+  `)
+  .eq('requester', user_id);
 
-  if(error) console.log(error);
-
-  return data;
+  const response = await Promise.all([requesteds, requesters]);
+  
+  console.log(response);
 }
 
 export const getRequestersOfUser = async(user_id) => {
-  const requesters_ids = await supabase
+  const { data, error } = await supabase
   .from('petitions')
   .select(`
+    id,
     requester,
-    users()
+    users!petitions_requester_fkey(user_name, url_img)
   `)
   .eq('requested', user_id);
 
-  if(requesters_ids.error) console.log(requesters_ids.error);
+  if(error) console.log(error);
 
-  // console.log(requesters_ids);
+  console.log(data);
+}
+
+export const getUserRequests = async(user_id) => {
+  const { data, error }= await supabase
+  .from('petitions')
+  .select(`
+    id,
+    requested,
+    users!petitions_requested_fkey(user_name, url_img)
+  `)
+  .eq('requester', user_id);
+
+  if(error) console.log(error);
+
+  console.log(data);
 }
 
 export const getPublicUserId = async(session_id) => {
