@@ -8,7 +8,7 @@ export const getPublicUsers = async(user_id) => {
 
   if(error) console.log(error);
 
-  return data;
+  return { data, error };
 }
 
 export const getUserConnections = async(user_id) => {
@@ -32,7 +32,17 @@ export const getUserConnections = async(user_id) => {
 
   const response = await Promise.all([requesteds, requesters]);
   
-  console.log(response);
+  if(response[0].error || response[1].error){
+    console.log(response);
+  }
+
+  return {
+    data: [...response[0].data, ...response[1].data],
+    errors: [
+      response[0].error,
+      response[1].error
+    ]
+  }
 }
 
 export const getRequestersOfUser = async(user_id) => {
@@ -47,7 +57,7 @@ export const getRequestersOfUser = async(user_id) => {
 
   if(error) console.log(error);
 
-  console.log(data);
+  return { data, error };
 }
 
 export const getUserRequests = async(user_id) => {
@@ -62,7 +72,7 @@ export const getUserRequests = async(user_id) => {
 
   if(error) console.log(error);
 
-  console.log(data);
+  return { data, error };
 }
 
 export const getPublicUserId = async(session_id) => {
@@ -72,4 +82,46 @@ export const getPublicUserId = async(session_id) => {
   .eq('admin_id', session_id);
 
   return data[0].id
+}
+
+export const createConnection = async(requester, requested) => {
+  const { data, error } = await supabase
+  .from('connections')
+  .insert({ requester, requested })
+  .select();
+
+  if(error) console.log(error);
+
+  return data;
+}
+
+export const createRequest = async(requester, requested) => {
+  const { data, error } = await supabase
+  .from('petitions')
+  .insert({requester, requested})
+  .select();
+
+  if(error) console.log(error);
+
+  return data;
+}
+
+export const deleteRequest = async(petition_id) => {
+  const { error } = await supabase
+  .from('petitions')
+  .delete()
+  .eq('id', petition_id);
+
+  if(error) console.log(error);
+
+  return error;
+}
+
+export const acceptConnection = async(requester, requested, petition_id) => {
+  const [ connection_created, request_deleted ] = await Promise.all([
+    createConnection(requester, requested),
+    deleteRequest(petition_id)
+  ]);
+
+  return { connection_created, request_deleted };
 }
