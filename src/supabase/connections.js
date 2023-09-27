@@ -125,3 +125,12 @@ export const acceptConnection = async(requester, requested, petition_id) => {
 
   return { connection_created, request_deleted };
 }
+
+export const deleteConnection = async(connection_id) => {
+  const { error } = await supabase
+  .from('connections')
+  .delete()
+  .eq('id', connection_id);
+
+  return error;
+}
