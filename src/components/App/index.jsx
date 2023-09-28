@@ -19,6 +19,7 @@ import { putGroup } from '../../routes/editGroup';
 import { getUser } from '../../supabase/user';
 import { EditProfile } from '../../routes/editProfile';
 import { Connections } from '../../routes/connections';
+import { ConnectionsContext } from '../../context/connections';
 
 const router = createBrowserRouter([
   {
@@ -57,7 +58,9 @@ const router = createBrowserRouter([
       },
       {
         path: 'connections',
-        element: <Connections />,
+        element: <ConnectionsContext>
+          <Connections/>
+        </ConnectionsContext>,
       },
     ]
   },
