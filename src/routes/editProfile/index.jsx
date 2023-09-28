@@ -16,7 +16,7 @@ import {
 } from '../../supabase/user';
 
 export const EditProfile = () => {
-  const { user } = useLoaderData();
+  const { data: { user }, error } = useLoaderData();
   const { name, url_picture, key } = user.user_metadata;
 
   const [ picture, setPicture ] = React.useState(null);
@@ -109,7 +109,7 @@ export const EditProfile = () => {
       await updateUserPassword(password);
     }
 
-    window.location.href = '/perfil';
+    window.location.href = '/profile';
   }
 
   return (

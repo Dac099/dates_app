@@ -12,15 +12,21 @@ export const Requesteds = () => {
   }
 
   return (
-    <section>
-      <p className='text-xl font-bold text-center text-amber-700 mb-4'>Con quien quieres conectar</p>
+    <section
+      className='h-96'
+    >
+      <p 
+        className={`text-xl font-bold text-center  mb-4 ${requesteds.length < 1 ? 'text-amber-700/20' : 'text-amber-700'}`} 
+      >
+        Con quien quieres conectar
+      </p>
       <div
-        className='overflow-y-auto max-h-96'
+        className='overflow-y-auto max-h-80'
       >
         {requesteds.map(request => (
           <article
             key={request.id}
-            className='border-2 p-2 box-border rounded-lg shadow-md bg-orange-100/20 border-orange-300 flex justify-between'
+            className='border-2 p-2 box-border rounded-lg shadow-md bg-orange-100/20 border-orange-300 flex justify-between w-3/4 mx-auto'
           >
 
             <div

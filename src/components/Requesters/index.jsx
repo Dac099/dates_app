@@ -17,15 +17,21 @@ export const Requesters = () => {
   }
 
   return (
-    <section>
-      <p className='text-xl font-bold text-center text-amber-700 mt-8 mb-4'>Quieren conectar contigo</p>
+    <section
+      className='h-96'
+    >
+      <p 
+        className={`text-xl font-bold text-center  mb-4 ${requesters.length < 1 ? 'text-amber-700/20' : 'text-amber-700'}`}      
+      >
+        Quieren conectar contigo
+      </p>
       <div
-        className='overflow-y-auto max-h-96'
+        className='overflow-y-auto max-h-80'
       >
         {requesters.map(request => (
           <article
             key={request.id}
-            className='border-2 p-2 box-border rounded-lg shadow-md bg-orange-100/20 border-orange-300 flex flex-col gap-2'
+            className='border-2 p-2 box-border rounded-lg shadow-md bg-orange-100/20 border-orange-300 flex flex-col gap-2 w-3/4 mx-auto'
           >
 
             <div

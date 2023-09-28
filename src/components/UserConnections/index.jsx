@@ -12,14 +12,14 @@ export const UserConnections = () => {
   } 
 
   return (
-    <section>
+    <section className='row-span-2'>
       <p
-        className='text-xl font-bold text-amber-700 text-center mt-8 mb-4'
+        className={`text-xl font-bold text-center mb-4 ${connections.length < 1 ? 'text-amber-700/20' : 'text-amber-700'}`}
       >
         {connections.length > 0 ? 'Tus conexiones' : '̀¿Quién será tu primer conexión?'}
       </p>
       <section
-        className='flex gap-2 justify-center'
+        className='flex gap-2 justify-center flex-wrap overflow-y-auto'
       >
         {connections.map(connection => (
           <article

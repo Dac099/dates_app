@@ -28,14 +28,14 @@ export const ActivitieCard = ({data, group_id}) => {
     if(value === 0) {
       return (
         <AiOutlineStar 
-          key={index * rating}
+          key={index + rating}
         />
       );
     }
 
     return (
       <AiFillStar 
-        key={index * rating}
+        key={index + rating}
         className='text-yellow-400'
       />
     );

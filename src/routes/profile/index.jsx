@@ -29,7 +29,7 @@ const Profile = () => {
             className='absolute bottom-1 right-1 bg-pink-700 w-11 h-11 rounded-full grid place-content-center text-2xl text-center text-pink-100 cursor-pointer'
           >
             <Link
-              to={`/perfil/${user_data.id}/edit`}
+              to={`/profile/${user_data.id}/edit`}
             >
               <LiaUserEditSolid />
             </Link>

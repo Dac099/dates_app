@@ -4,6 +4,8 @@ import { Connections_context } from '../../context/connections';
 import { Requesteds } from '../../components/Requesteds';
 import { Requesters } from '../../components/Requesters';
 import { UserConnections } from '../../components/UserConnections';
+import { OnLoading } from '../../components/OnLoading';
+import { OnError } from '../../components/OnError';
 
 export const Connections = () => {
   const {
@@ -12,19 +14,23 @@ export const Connections = () => {
   } = React.useContext(Connections_context);
 
   if(on_error){
-    return <p>Error</p>
+    return <OnError />
   }
 
   if(loading){ 
-    return <p>Cargando</p>;
+    return <OnLoading />
   }
   
   return (
     <>
       <SearchBar/>
-      <Requesteds />
-      <Requesters />
-      <UserConnections />
+      <section
+        className='md:grid grid-cols-2 grid-rows-2 max-w-5xl mx-auto'
+      >
+        <UserConnections />
+        <Requesteds />
+        <Requesters />
+      </section>
     </>
   );
 }
