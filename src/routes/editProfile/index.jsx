@@ -132,13 +132,13 @@ export const EditProfile = () => {
             {url_picture !== '' && !preview_url &&
               <img 
                 src={url_picture}
-                className='rounded-full w-full h-full'
+                className='rounded-full w-full h-full object-cover'
               />
             }
             {preview_url &&
               <img 
                 src={preview_url}
-                className='rounded-full w-full h-full'
+                className='rounded-full w-full h-full object-cover'
               />
             }
             {url_picture === '' && !preview_url &&
@@ -169,6 +169,7 @@ export const EditProfile = () => {
               className='text-sm'
               onChange={e => {
                 setPicture(e.target.files[0]);
+                console.log(e.target.files[0].type)
 
                 const reader = new FileReader()
                 reader.readAsDataURL(e.target.files[0]);

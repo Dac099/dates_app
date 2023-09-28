@@ -22,7 +22,7 @@ const Profile = () => {
           {url_picture !== '' &&
             <img 
               src={url_picture}
-              className='absolute top-0 left-0 w-full h-full rounded-full' 
+              className='absolute top-0 left-0 w-full h-full rounded-full object-cover' 
             />
           }
           <div 

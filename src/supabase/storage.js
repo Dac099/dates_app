@@ -3,10 +3,11 @@ import { supabase } from "./client";
 
 export const createFolderWithPicture = async(user_id, picture) => {
   try {
+    const img_type = picture.type.split('/')[1];
     const { data, error } = await supabase
     .storage
     .from('avatar')
-    .upload(`${user_id}/${Date.now()}.png`, picture, {
+    .upload(`${user_id}/${Date.now()}.${img_type}`, picture, {
       cacheControl: 'no-cache'
     });
 
