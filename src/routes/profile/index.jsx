@@ -92,7 +92,7 @@ const Profile = () => {
           <p 
             className='text-slate-800 font-black text-2xl text-center bg-gray-300 rounded-md shadow-md grid place-content-center'
           >
-            0
+            {user_data.total_connections}
           </p>
         </article>
       </section>

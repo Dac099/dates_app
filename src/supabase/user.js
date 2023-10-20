@@ -3,9 +3,17 @@ import { supabase } from "./client";
 export const getUserData = async() => {
   try {
     //returns the username, total groups, total conections and total activities
-    const { count:total_groups, error:groups_error } = await supabase.from('groups').select('*', {count: 'exact', head: true});
+    const { count:total_groups, error:groups_error } = await supabase
+      .from('groups')
+      .select('*', {count: 'exact', head: true});
     
-    const { count:total_activities, error:activities_error } = await supabase.from('activities').select('*', {count: 'exact', head: true});
+    const { count:total_activities, error:activities_error } = await supabase
+      .from('activities')
+      .select('*', {count: 'exact', head: true});
+
+    const { count:total_connections, error: connections_error } = await supabase
+      .from('connections')
+      .select('*', {count: 'exact', head: true});
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -17,7 +25,8 @@ export const getUserData = async() => {
       user_name: user.user_metadata.name,
       url_picture: user.user_metadata.url_picture,
       total_activities,
-      total_groups
+      total_groups, 
+      total_connections
     }
 
   } catch (error) {
