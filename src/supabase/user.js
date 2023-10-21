@@ -2,31 +2,34 @@ import { supabase } from "./client";
 
 export const getUserData = async() => {
   try {
-    //returns the username, total groups, total conections and total activities
-    const { count:total_groups, error:groups_error } = await supabase
-      .from('groups')
-      .select('*', {count: 'exact', head: true});
+    const user_data = [
+      supabase.from('groups').select('*', {count: 'exact', head: true}),
+      supabase.from('activities').select('*', {count: 'exact', head: true}),      
+      supabase.from('connections').select('*', {count: 'exact', head: true}),
+      supabase.auth.getUser(),
+    ];
     
-    const { count:total_activities, error:activities_error } = await supabase
-      .from('activities')
-      .select('*', {count: 'exact', head: true});
+    const [ 
+      groups, 
+      activities, 
+      connections, 
+      admin_user 
+    ] = await Promise.all(user_data);
 
-    const { count:total_connections, error: connections_error } = await supabase
-      .from('connections')
-      .select('*', {count: 'exact', head: true});
+    if(groups.error) throw new Error(groups.error);
+    if(activities.error) throw new Error(activities.error);
+    if(connections.error) throw new Error(connections.error);
+    if(admin_user.error) throw new Error(admin_user.error)
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user } = admin_user.data;
 
-    if(groups_error) throw new Error(groups_error);
-    if(activities_error) throw new Error(activities_error);
-    
     return {
       id: user.id,
       user_name: user.user_metadata.name,
       url_picture: user.user_metadata.url_picture,
-      total_activities,
-      total_groups, 
-      total_connections
+      total_activities: activities.count,
+      total_groups: groups.count, 
+      total_connections: connections.count
     }
 
   } catch (error) {
@@ -139,7 +142,51 @@ export const verifyUserNameUnique = async(user_name) => {
     .select('user_name')
     .eq('user_name', user_name);
 
+    if(error) throw new Error(error);
+
     return data.length < 1;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const updatePublicEmail = async(new_email, admin_id) => {
+  try {
+    const { error } = await supabase
+    .from('users')
+    .update({ email: new_email })
+    .eq('admin_id', admin_id);
+
+    if(error) throw new Error(error);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const updatePublicUserName = async(new_name, admin_id) => {
+  try {
+    const { error } = await supabase
+    .from('users')
+    .update({ user_name: new_name })
+    .eq('admin_id', admin_id);
+
+    if(error) throw new Error(error);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const updatePublicURLPicture = async(url_img, admin_id) => {
+  try {
+    const { error } = await supabase
+    .from('users')
+    .update({ url_img : url_img })
+    .eq('admin_id', admin_id);
+
+    if(error) throw new Error(error);
 
   } catch (error) {
     console.log(error);

@@ -12,11 +12,14 @@ import {
   updateUserImgUrl, 
   updateUserEmail, 
   updateUserName,
-  updateUserPassword
+  updateUserPassword,
+  updatePublicEmail,
+  updatePublicURLPicture,
+  updatePublicUserName
 } from '../../supabase/user';
 
 export const EditProfile = () => {
-  const { data: { user }, error } = useLoaderData();
+  const { data: { user } } = useLoaderData();
   const { name, url_picture, key } = user.user_metadata;
 
   const [ picture, setPicture ] = React.useState(null);
@@ -61,26 +64,38 @@ export const EditProfile = () => {
     e.preventDefault();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+    //Set profile picture for the first time
     if(url_picture === '' && picture){
 
       const { path } = await createFolderWithPicture(user.id, picture);         
       const key = path.split('/')[1].split('.')[0];      
       const { publicUrl } = await getPublicUrlPicture(path);
-      await updateUserImgUrl(publicUrl, key);      
+      await Promise.all([
+        updateUserImgUrl(publicUrl, key),
+        updatePublicURLPicture(publicUrl, user.id)
+      ]);
     }
 
+    //Update current profile picture
     if(url_picture !== '' && picture){
 
       await deleteUserPicture(user.id, key);
       const { path } = await createFolderWithPicture(user.id, picture);
       const new_key = path.split('/')[1].split('.')[0];      
       const { publicUrl } = await getPublicUrlPicture(path);
-      await updateUserImgUrl(publicUrl, new_key);
+      await Promise.all([
+        updateUserImgUrl(publicUrl, new_key),
+        updatePublicURLPicture(publicUrl, user.id)
+      ]);
     }
 
+    //Update user_name
     if(user_name !== ''){
       if(user_name !== name){        
-        await updateUserName(user_name);
+        await Promise.all([
+          updateUserName(user_name),
+          updatePublicUserName(user_name, user.id)
+        ]);
       }
     }else{
       setUserNameError(true);
@@ -91,9 +106,13 @@ export const EditProfile = () => {
       setIsAnEmail(false);
     }
 
+    //udpate email
     if(email !== '' && is_an_email){
       if(email !== user.email){
-        await updateUserEmail(email);
+        await Promise.all([
+          updateUserEmail(email),
+          updatePublicEmail(email, user.id)
+        ]);
       }
     }
     else{
@@ -101,6 +120,7 @@ export const EditProfile = () => {
       return;
     }
 
+    //update password
     if(
       lengtPassword && 
       capitalPassword &&
